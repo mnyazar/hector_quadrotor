@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
 <robot name="hector_quadrotor">
+
   <link name="base_link">
       <inertial>
       <mass value="1.477" />
@@ -60,6 +61,16 @@
         <frameName>lidar_link</frameName>
       </plugin>
     </sensor>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="quadrotor_groundtruth_sim" filename="libgazebo_ros_p3d.so">
+      <updateRate>100.0</updateRate>
+      <bodyName>base_link</bodyName>
+      <topicName>ground_truth/state</topicName>
+      <gaussianNoise>0.0</gaussianNoise>
+      <frameName>world</frameName>
+    </plugin>
   </gazebo>
 
 

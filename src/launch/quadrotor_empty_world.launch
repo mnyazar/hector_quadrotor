@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Simulate robot in gazebo: To load our robot into the empty world  -->
 <launch>
-    <param name="robot_description" command="cat '$(find hector_quadrotor_gazebo)/urdf/quadrotor.urdf'" />
-
     <arg name="x" default="0"/>
-    <arg name="y" default="0"/>
+    <arg name="y" default="-3"/>
     <arg name="z" default="0.3"/>
+    <arg name="model" default="$(find hector_quadrotor_gazebo)/urdf/quadrotor.urdf"/>
+    <arg name="tf_prefix" default=""/>
+    <arg name="use_ground_truth_for_tf" default="true" />
+    <arg name="world_frame" default="world"/> 
+    <arg name="base_link_frame" default="$(arg tf_prefix)/base_link"/>
 
+    <param name="robot_description" command="cat '$(arg model)'" />
+    <param name="tf_prefix" type="string" value="$(arg tf_prefix)"/> <!-- required for hector_pose_estimation and message_to_tf -->
+    <param name="base_link_frame" type="string" value="$(arg base_link_frame)" />
+    <param name="base_stabilized_frame" type="string" value="$(arg tf_prefix)/base_stabilized" />
+    <param name="base_footprint_frame" type="string" value="$(arg tf_prefix)/base_footprint" />
+    <param name="world_frame" type="string" value="$(arg world_frame)" />
+
+    <!-- start robot state publisher -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen" >
+        <param name="publish_frequency" type="double" value="50.0" />
+    </node>
+
+    <!-- publish state and tf -->
+    <node name="ground_truth_to_tf" pkg="message_to_tf" type="message_to_tf" output="screen">
+        <param name="odometry_topic" value="ground_truth/state" />
+        <param name="frame_id" value="$(arg world_frame)" />
+        <param name="tf_prefix" value="$(arg tf_prefix)" if="$(arg use_ground_truth_for_tf)" />
+        <param name="tf_prefix" value="$(arg tf_prefix)/ground_truth" unless="$(arg use_ground_truth_for_tf)" />
+    </node>
+ 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
     	    <arg name="world_name" value="$(find hector_quadrotor_gazebo)/worlds/room.world"/>
 		    <arg name="paused" value="false"/>
