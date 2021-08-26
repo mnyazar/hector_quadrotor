@@ -2,11 +2,14 @@
 
 
 ```
-1- git clone https://github.com/mnyazar/hector_quadrotor.git
-2- catkin_make
-3- source devel/setup.bash
-4- roslaunch hector_quadrotor_gazebo quadrotor_empty_world.launch
-5- roslaunch hector_quadrotor_gazebo gmapping.launch
-6- rosrun hector_quadrotor_gazebo drone_keyboard
+1- mkdir -p catkin_ws/src
+2- cd catkin_ws/src
+3- git clone https://github.com/mnyazar/hector_quadrotor.git
+4- cd ..
+5- catkin_make
+6- source devel/setup.bash
+7- roslaunch hector_quadrotor_gazebo quadrotor_empty_world.launch
+8- roslaunch hector_quadrotor_gazebo gmapping.launch
+9- rosrun hector_quadrotor_gazebo drone_keyboard
 ```
 
